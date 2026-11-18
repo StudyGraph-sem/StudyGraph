@@ -12,7 +12,7 @@ using StudyGraph.Infrastructure.Persistence;
 namespace StudyGraph.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261114121729_InitialUsers")]
+    [Migration("20261117230359_InitialUsers")]
     partial class InitialUsers
     {
         /// <inheritdoc />
@@ -27,12 +27,10 @@ namespace StudyGraph.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("StudyGraph.Domain.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
