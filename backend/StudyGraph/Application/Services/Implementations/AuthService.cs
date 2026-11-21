@@ -15,6 +15,8 @@ public class AuthService(
     IJwtTokenService jwtTokenService
 ) : IAuthService
 {
+    private static readonly User DummyUser = new();
+    private static readonly string DummyPasswordHash = new PasswordHasher<User>().HashPassword(DummyUser, Guid.NewGuid().ToString());
     public async Task<UserResponse?> RegisterAsync(
         RegisterRequest request,
         CancellationToken cancellationToken = default)
@@ -79,7 +81,10 @@ public async Task<AuthResponse?> LoginAsync(
         email, cancellationToken);
 
     if (user is null)
+    {
+        passwordHasher.VerifyHashedPassword(DummyUser, DummyPasswordHash, request.Password);
         return null;
+    }
 
     var verificationResult =
         passwordHasher.VerifyHashedPassword(

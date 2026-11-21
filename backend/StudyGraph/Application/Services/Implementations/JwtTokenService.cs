@@ -25,6 +25,8 @@ public sealed class JwtTokenService(
                        ?? throw new InvalidOperationException(
                            "JWT audience is not configured.");
 
+        if (user.Role is not ("User" or "Admin"))
+            throw new InvalidOperationException("Unsupported user role.");
         var expiresAt = DateTime.UtcNow.AddMinutes(15);
 
         var claims = new[]
