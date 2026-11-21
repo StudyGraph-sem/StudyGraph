@@ -1,0 +1,56 @@
+html {
+  color-scheme: light;
+  font-family: Arial, sans-serif;
+  color: #000;
+  background: #fff;
+}
+body {
+  margin: 24px;
+}
+main {
+  max-width: 640px;
+}
+nav {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+}
+a {
+  color: #000;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  max-width: 360px;
+}
+input,
+button {
+  font: inherit;
+  color: #000;
+  background: #fff;
+  border: 1px solid #000;
+  padding: 8px;
+}
+button {
+  cursor: pointer;
+  margin: 4px 4px 4px 0;
+}
+button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+dt {
+  font-weight: bold;
+  margin-top: 12px;
+}
+dd {
+  margin: 4px 0;
+  overflow-wrap: anywhere;
+}

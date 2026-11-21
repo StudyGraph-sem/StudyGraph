@@ -1,11 +1,21 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
+const auth = useAuthStore()
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <header>
+    <strong>StudyGraph</strong>
+    <nav aria-label="Основная навигация">
+      <template v-if="auth.authenticated"><RouterLink to="/profile">Профиль</RouterLink></template>
+      <template v-else>
+        <RouterLink to="/login">Вход</RouterLink>
+        <RouterLink to="/register">Регистрация</RouterLink>
+      </template>
+    </nav>
+  </header>
+  <main>
+    <p v-if="!auth.initialized" role="status">�������������� ������</p>
+    <RouterView />
+  </main>
 </template>
-
-<style scoped></style>
