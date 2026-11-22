@@ -57,6 +57,55 @@ namespace StudyGraph.Infrastructure.Persistence.Migrations
                     b.ToTable("refresh_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("StudyGraph.Domain.Entities.StudyTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
+
+                    b.Property<DateTime?>("DueAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "DueAt");
+
+                    b.HasIndex("UserId", "Status", "Priority");
+
+                    b.ToTable("study_tasks", (string)null);
+                });
+
             modelBuilder.Entity("StudyGraph.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -102,6 +151,15 @@ namespace StudyGraph.Infrastructure.Persistence.Migrations
                 });
 
             modelBuilder.Entity("StudyGraph.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("StudyGraph.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StudyGraph.Domain.Entities.StudyTask", b =>
                 {
                     b.HasOne("StudyGraph.Domain.Entities.User", null)
                         .WithMany()

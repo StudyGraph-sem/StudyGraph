@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using StudyGraph.Application.Validators;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Text;
@@ -104,6 +106,11 @@ builder.Services.AddRateLimiter(options =>
         context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
         _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
 });
+builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false)));
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddScoped<StudyTaskValidator>();
+builder.Services.AddScoped<IStudyTaskRepository, StudyTaskRepository>();
+builder.Services.AddScoped<IStudyTaskService, StudyTaskService>();
 var app = builder.Build();
 
 
@@ -121,6 +128,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuthEndpoints();
+app.MapStudyTaskEndpoints();
 
 app.MapGet("/api/health", () =>
     {
