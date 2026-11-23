@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyGraph", "StudyGraph\St
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyGraph.AuthTests", "StudyGraph.AuthTests\StudyGraph.AuthTests.csproj", "{E274F036-71A9-4A94-BEA1-E11A623B106C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyGraph.GraphTests", "StudyGraph.GraphTests\StudyGraph.GraphTests.csproj", "{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,18 @@ Global
 		{E274F036-71A9-4A94-BEA1-E11A623B106C}.Release|x64.Build.0 = Release|Any CPU
 		{E274F036-71A9-4A94-BEA1-E11A623B106C}.Release|x86.ActiveCfg = Release|Any CPU
 		{E274F036-71A9-4A94-BEA1-E11A623B106C}.Release|x86.Build.0 = Release|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Debug|x64.Build.0 = Debug|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Debug|x86.Build.0 = Debug|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Release|x64.ActiveCfg = Release|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Release|x64.Build.0 = Release|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Release|x86.ActiveCfg = Release|Any CPU
+		{B500FFBD-B0CE-4EB5-A7C2-8A06C34C3528}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
