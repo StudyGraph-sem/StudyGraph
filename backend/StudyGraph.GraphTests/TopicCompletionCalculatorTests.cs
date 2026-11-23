@@ -72,6 +72,32 @@ public class TopicCompletionCalculatorTests
     }
 
     [Fact]
+    public void RecalculatesAncestorsWhenCompletedLeafBecomesIncomplete()
+    {
+        var root = NewTopic(); var branch = NewTopic(); var leaf = NewTopic(StudyStatus.Completed);
+        Topic[] topics = [root, branch, leaf]; TopicDependency[] links = [Link(root, branch), Link(branch, leaf)];
+
+        var before = calculator.Calculate(roadmap, topics, links);
+        leaf.StudyStatus = StudyStatus.NotStarted;
+        var after = calculator.Calculate(roadmap, topics, links);
+
+        Assert.True(before.IsRoadmapCompleted);
+        Assert.All(after.CompletedTopics.Values, value => Assert.False(value));
+        Assert.False(after.IsRoadmapCompleted);
+        Assert.True(before.CompletedTopics[root.Id]);
+    }
+
+    [Fact]
+    public void RejectsNullElementsAndLinksFromAnotherRoadmap()
+    {
+        var a = NewTopic(); var b = NewTopic(); var link = Link(a, b);
+        Assert.Throws<ArgumentException>(() => calculator.Calculate(roadmap, [a, null!], []));
+        Assert.Throws<ArgumentException>(() => calculator.Calculate(roadmap, [a, b], [null!]));
+        link.RoadmapId = Guid.NewGuid();
+        Assert.Throws<ArgumentException>(() => calculator.Calculate(roadmap, [a, b], [link]));
+    }
+
+    [Fact]
     public void RejectsInvalidTopicsAndLinks()
     {
         var a = NewTopic(); var b = NewTopic(); var c = NewTopic(); var link = Link(a, b);
