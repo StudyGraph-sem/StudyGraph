@@ -101,4 +101,23 @@ public class TopicHierarchyValidatorTests
         Assert.Equal(a.Id, first.PrerequisiteTopicId);
         Assert.Equal(b.Id, first.TopicId);
     }
+
+    [Fact]
+    public void RejectsNullElementsAndLinksFromAnotherRoadmap()
+    {
+        var a = NewTopic(); var b = NewTopic(); var link = Link(a, b);
+        Assert.Throws<ArgumentException>(() => validator.Validate(link, [a, null!, b], []));
+        Assert.Throws<ArgumentException>(() => validator.Validate(link, [a, b], [null!]));
+        var wrongRoadmap = Link(a, b); wrongRoadmap.RoadmapId = Guid.NewGuid();
+        Assert.Throws<ArgumentException>(() => validator.Validate(link, [a, b], [wrongRoadmap]));
+    }
+
+    [Fact]
+    public void DetectsCycleInExistingGraphEvenWhenCandidateIsUnrelated()
+    {
+        var a = NewTopic(); var b = NewTopic(); var c = NewTopic(); var d = NewTopic();
+        var error = Assert.Throws<ArgumentException>(() =>
+            validator.Validate(Link(c, d), [a, b, c, d], [Link(a, b), Link(b, a)]));
+        Assert.Equal("links", error.ParamName);
+    }
 }
