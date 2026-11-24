@@ -1,0 +1,529 @@
+openapi: 3.0.3
+info:
+  title: StudyGraph API
+  version: 0.1.0
+tags:
+  - name: Предметы
+  - name: Роадмапы
+  - name: Темы
+  - name: Связи
+  - name: Граф
+paths:
+  /api/subjects:
+    get:
+      tags: [Предметы]
+      summary: Получить список доступных предметов
+      description: В список входят доступные предметы; секретные токены не возвращаются.
+      operationId: listSubjects
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список предметов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subject'
+    post:
+      tags: [Предметы]
+      summary: Создать предмет
+      description: Владельцем становится текущий пользователь; ID владельца не передаётся клиентом.
+      operationId: createSubject
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectInput'
+      responses:
+        '201':
+          description: Предмет создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/subjects/{subjectId}:
+    parameters:
+      - $ref: '#/components/parameters/SubjectId'
+    get:
+      tags: [Предметы]
+      summary: Получить предмет
+      description: Доступ определяется владельцем и видимостью предмета.
+      operationId: getSubject
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Предмет
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Subject' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Предметы]
+      summary: Изменить предмет
+      description: Полная замена изменяемых полей; доступна владельцу или уполномоченному администратору.
+      operationId: updateSubject
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SubjectInput' }
+      responses:
+        '200':
+          description: Обновлённый предмет
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Subject' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Предметы]
+      summary: Удалить предмет
+      operationId: deleteSubject
+      security:
+        - bearerAuth: []
+      responses:
+        '204': { description: Предмет удалён }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/subjects/{subjectId}/roadmaps:
+    parameters:
+      - $ref: '#/components/parameters/SubjectId'
+    get:
+      tags: [Роадмапы]
+      summary: Получить роадмапы предмета
+      description: Доступ наследуется от предмета.
+      operationId: listRoadmaps
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список роадмапов
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Roadmap' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    post:
+      tags: [Роадмапы]
+      summary: Создать роадмап в предмете
+      operationId: createRoadmap
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RoadmapInput' }
+      responses:
+        '201':
+          description: Роадмап создан
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Roadmap' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/roadmaps/{roadmapId}:
+    parameters:
+      - $ref: '#/components/parameters/RoadmapId'
+    get:
+      tags: [Роадмапы]
+      summary: Получить роадмап
+      operationId: getRoadmap
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Роадмап
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Roadmap' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Роадмапы]
+      summary: Изменить роадмап
+      operationId: updateRoadmap
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RoadmapInput' }
+      responses:
+        '200':
+          description: Обновлённый роадмап
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Roadmap' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Роадмапы]
+      summary: Удалить роадмап
+      operationId: deleteRoadmap
+      security:
+        - bearerAuth: []
+      responses:
+        '204': { description: Роадмап удалён }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/roadmaps/{roadmapId}/topics:
+    parameters:
+      - $ref: '#/components/parameters/RoadmapId'
+    get:
+      tags: [Темы]
+      summary: Получить темы роадмапа
+      operationId: listTopics
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список тем
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Topic' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    post:
+      tags: [Темы]
+      summary: Создать тему
+      operationId: createTopic
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TopicInput' }
+      responses:
+        '201':
+          description: Тема создана
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Topic' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/topics/{topicId}:
+    parameters:
+      - $ref: '#/components/parameters/TopicId'
+    get:
+      tags: [Темы]
+      summary: Получить тему
+      operationId: getTopic
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Тема
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Topic' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Темы]
+      summary: Изменить данные темы
+      description: Статус изучения изменяется отдельной операцией; для темы с подтемами завершение вычисляется автоматически.
+      operationId: updateTopic
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TopicInput' }
+      responses:
+        '200':
+          description: Обновлённая тема
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Topic' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Темы]
+      summary: Удалить тему
+      operationId: deleteTopic
+      security:
+        - bearerAuth: []
+      responses:
+        '204': { description: Тема удалена }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/topics/{topicId}/status:
+    parameters:
+      - $ref: '#/components/parameters/TopicId'
+    patch:
+      tags: [Темы]
+      summary: Изменить статус темы без подтем
+      description: Статус темы с подтемами определяется по их завершению.
+      operationId: updateLeafTopicStatus
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [studyStatus]
+              properties:
+                studyStatus: { $ref: '#/components/schemas/StudyStatus' }
+      responses:
+        '200':
+          description: Тема с обновлённым статусом
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Topic' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/roadmaps/{roadmapId}/dependencies:
+    parameters:
+      - $ref: '#/components/parameters/RoadmapId'
+    get:
+      tags: [Связи]
+      summary: Получить связи роадмапа
+      operationId: listTopicLinks
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список связей
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/TopicLink' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    post:
+      tags: [Связи]
+      summary: Связать родительскую тему и подтему
+      description: У подтемы может быть только один родитель. Самосвязи, дубли и циклы запрещены.
+      operationId: createTopicLink
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TopicLinkInput' }
+      responses:
+        '201':
+          description: Связь создана
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TopicLink' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/roadmaps/{roadmapId}/dependencies/{parentTopicId}/{childTopicId}:
+    parameters:
+      - $ref: '#/components/parameters/RoadmapId'
+      - name: parentTopicId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+        description: ID родительской темы
+      - name: childTopicId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+        description: ID подтемы
+    delete:
+      tags: [Связи]
+      summary: Удалить связь между темой и подтемой
+      operationId: deleteTopicLink
+      security:
+        - bearerAuth: []
+      responses:
+        '204': { description: Связь удалена }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/roadmaps/{roadmapId}/graph:
+    parameters:
+      - $ref: '#/components/parameters/RoadmapId'
+    get:
+      tags: [Граф]
+      summary: Получить граф роадмапа
+      operationId: getRoadmapGraph
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Темы, связи и признак завершения роадмапа
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RoadmapGraph' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    SubjectId:
+      name: subjectId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    RoadmapId:
+      name: roadmapId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    TopicId:
+      name: topicId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+  responses:
+    BadRequest: { description: Некорректные данные запроса }
+    Unauthorized: { description: Требуется авторизация }
+    Forbidden: { description: Нет доступа к ресурсу }
+    NotFound: { description: Ресурс не найден }
+    Conflict: { description: Операция противоречит правилам или состоянию данных }
+  schemas:
+    SubjectInput:
+      type: object
+      required: [title, visibility]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200, pattern: '\S' }
+        description: { type: string, nullable: true }
+        visibility: { $ref: '#/components/schemas/Visibility' }
+    Subject:
+      allOf:
+        - $ref: '#/components/schemas/SubjectInput'
+        - type: object
+          required: [id]
+          properties:
+            id: { type: string, format: uuid }
+    Visibility:
+      type: string
+      enum: [private, public, unlisted]
+    RoadmapInput:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200, pattern: '\S' }
+        description: { type: string, nullable: true }
+    Roadmap:
+      allOf:
+        - $ref: '#/components/schemas/RoadmapInput'
+        - type: object
+          required: [id, subjectId]
+          properties:
+            id: { type: string, format: uuid }
+            subjectId: { type: string, format: uuid }
+    TopicInput:
+      type: object
+      required: [title, importanceWeight]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200, pattern: '\S' }
+        description: { type: string, nullable: true }
+        importanceWeight:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 999999.99
+          multipleOf: 0.01
+        positionX: { type: number, nullable: true, minimum: -999999999.999, maximum: 999999999.999, multipleOf: 0.001 }
+        positionY: { type: number, nullable: true, minimum: -999999999.999, maximum: 999999999.999, multipleOf: 0.001 }
+        level:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Уровень общности для отображения.
+    Topic:
+      allOf:
+        - $ref: '#/components/schemas/TopicInput'
+        - type: object
+          required: [id, roadmapId, studyStatus, isCompleted]
+          properties:
+            id: { type: string, format: uuid }
+            roadmapId: { type: string, format: uuid }
+            studyStatus:
+              allOf:
+                - $ref: '#/components/schemas/StudyStatus'
+              description: Сохранённый статус изучения.
+            isCompleted:
+              type: boolean
+              description: Для листовой темы определяется отметкой ученика; для темы с подтемами вычисляется по ним.
+    StudyStatus:
+      type: string
+      enum: [not_started, in_progress, completed]
+    TopicLinkInput:
+      type: object
+      required: [parentTopicId, childTopicId]
+      properties:
+        parentTopicId: { type: string, format: uuid, description: ID родительской темы }
+        childTopicId: { type: string, format: uuid, description: ID подтемы }
+    TopicLink:
+      allOf:
+        - $ref: '#/components/schemas/TopicLinkInput'
+        - type: object
+          required: [roadmapId]
+          properties:
+            roadmapId: { type: string, format: uuid }
+    RoadmapGraph:
+      type: object
+      required: [roadmapId, topics, links, isCompleted]
+      properties:
+        roadmapId: { type: string, format: uuid }
+        topics:
+          type: array
+          items: { $ref: '#/components/schemas/Topic' }
+        links:
+          type: array
+          items: { $ref: '#/components/schemas/TopicLink' }
+        isCompleted:
+          type: boolean
+          description: Роадмап завершён, когда завершены все темы; пустой роадмап не завершён.
