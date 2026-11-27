@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<StudyTask> StudyTasks => Set<StudyTask>();
+    public DbSet<Note> Notes => Set<Note>();
 
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)
