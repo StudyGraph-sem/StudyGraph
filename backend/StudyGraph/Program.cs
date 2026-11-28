@@ -111,6 +111,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<StudyTaskValidator>();
 builder.Services.AddScoped<IStudyTaskRepository, StudyTaskRepository>();
 builder.Services.AddScoped<IStudyTaskService, StudyTaskService>();
+builder.Services.AddScoped<IProgressService, ProgressService>();
 var app = builder.Build();
 
 
