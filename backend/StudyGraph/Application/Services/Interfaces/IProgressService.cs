@@ -1,6 +1,8 @@
+using StudyGraph.Application.DTOs.Requests;
+using StudyGraph.Application.DTOs.Responses;
 namespace StudyGraph.Application.Services.Interfaces;
 
 public interface IProgressService
 {
-    decimal CalculateWeightedProgress();
+    RoadmapProgressResponse CalculateWeightedProgress(Guid userId, UserRoadmapProgressSnapshot snapshot);
 }
