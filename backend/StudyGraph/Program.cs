@@ -112,6 +112,10 @@ builder.Services.AddScoped<StudyTaskValidator>();
 builder.Services.AddScoped<IStudyTaskRepository, StudyTaskRepository>();
 builder.Services.AddScoped<IStudyTaskService, StudyTaskService>();
 builder.Services.AddScoped<IProgressService, ProgressService>();
+
+builder.Services.AddScoped<INoteRepository, NoteRepository>();
+builder.Services.AddScoped<INoteService, NoteService>();
+
 var app = builder.Build();
 
 
